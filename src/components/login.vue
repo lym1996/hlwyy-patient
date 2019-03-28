@@ -30,6 +30,7 @@
           </div>
           <div class="formItem margintop15">
             <el-input
+              type="password"
               prefix-icon="el-icon-ts-lock"
               v-model="password"
               placeholder="请输入密码"
@@ -38,6 +39,7 @@
           </div>
           <div v-show="tabIndex == 1 || tabIndex == 2" class="formItem margintop15">
             <el-input
+              type="password"
               prefix-icon="el-icon-ts-lock"
               v-model="passwordAgain"
               placeholder="请再次输入密码"

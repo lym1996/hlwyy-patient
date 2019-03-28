@@ -1,17 +1,17 @@
 <template>
     <div>
         <div class="height200">
-            <b-img :src="zjyy" class="height200 width100pct magintop-1" />
+            <b-img :src="zkmz" class="height200 width100pct magintop-1"/>
         </div>
         <div class="width100pct bgcolor-f4f4f4">
-            <div class="width1210 marginXauto  margintop20 bgcolor-white">
-				<div class="clear marginleft30 marginright30 borderbottom">
-					<span class="floatLeft lineheight40 color-333 bold fontsize16">就诊流程</span>
-				</div>
-				<div class="marginleft30 marginright30">
-					<progressno :step="1"></progressno>
-				</div>
-			</div>
+            <div class="width1210 marginXauto margintop20 bgcolor-white">
+                <div class="clear marginleft30 marginright30 borderbottom">
+                    <span class="floatLeft lineheight40 color-333 bold fontsize16">就诊流程</span>
+                </div>
+                <div class="marginleft30 marginright30">
+                    <progressno></progressno>
+                </div>
+            </div>
         </div>
         <div class="width100pct bgcolor-f4f4f4 marginbottom170">
             <div class="width1210 marginXauto  margintop20 bgcolor-white">
@@ -20,8 +20,8 @@
                         <div class="marginleft30  borderbottom  marginright30">
                             <span class="lineheight40 color-333 bold fontsize16">预约医生</span>
 							<span class="color-959595 marginleft20">
-									请预约您要预约的医生
-							</span>
+									请选择您要预约的医生
+                            </span>
                         </div>
                         <div class="padding20X paddingleft30 paddingright100 bgcolor-fafafa relative">
                             <button v-show="deptlist && deptlist.length > 6" v-b-toggle.collapse1 class="searchFold" @click="fold = !fold">
@@ -36,7 +36,7 @@
                                     <span class="paddingright15 borderright2 bold">科室筛选</span>
                                 </div>
                                 <div class="floatLeft width990 paddingleft10">
-									<span :class="['chooseOption', {'curOption': isAllDept}]" @click="changeDept(-1)">全部</span>
+									<span :class="['chooseOption', {'curOption': isAllDept}]" @click="changeDept(-1,-1)">全部</span>
 									<span v-if="index<6" v-for="(dept, index) in deptlist" :key="index" @click="changeDept(index)" v-html="dept.deptName"
 									:class="['chooseOption', {'curOption': dept.isChecked}]">
 									</span>
@@ -77,17 +77,17 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>    
 </template>
 <script>
-import zjyy from '../assets/img/configImg/zjyybanner40c7c3.png'
+import zkmz from '../assets/img/configImg/zkmzbanner40c7c3.png'
 import progressno from '../components/progressno'
 import dochover from '../components/dochover'
 export default {
-    components:{ progressno, dochover },
+    components: { progressno, dochover },
     data() {
         return {
-            zjyy:zjyy,
+            zkmz:zkmz,
             fold:true,
             isAllDept:true,
             isAllDate:true,
@@ -96,6 +96,7 @@ export default {
             dateTime:'',
             timeType:'',
             dateTimeLong:'',
+
             deptlist:[
                 {   
                     isChecked:false,
@@ -244,6 +245,24 @@ export default {
                 ],
         }
     },
+    mounted() {
+        let deptName = ''
+        if(this.$route.query.deptName != undefined){
+            deptName = this.$route.query.deptName
+        }
+        let index = null
+        for(let i = 0;i<this.deptlist.length;i++) {
+            if(deptName == this.deptlist[i].deptName) {
+                index = i
+                break;
+            }else{
+                index = -1
+            }
+        }
+        this.changeDept(index)
+        this.getScheduleList()
+        
+    },
     methods: {
         getScheduleList(){},//形参：科室名或者科室Id、排班日期、上午还是下午
         changeDept(index) {
@@ -251,7 +270,7 @@ export default {
             this.deptlist && this.deptlist.forEach( obj => {
                 obj.isChecked = false
             })
-            if(index == -1) {
+            if( index == -1) {
                 this.isAllDept = true
                 this.deptName = ''
             }else {

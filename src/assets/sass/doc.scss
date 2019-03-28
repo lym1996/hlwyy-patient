@@ -1,0 +1,56 @@
+.homeDoclist {
+    margin-top: 20px;
+    padding: 0 16px;
+    .dept {
+        text-align: center;
+        .nodept {
+            margin-top: 20px;
+            width: 180px;
+            height: 160px;
+        }
+    }
+}
+.doclist {
+    float: left;
+    margin: 0 5px;
+    width: 209px;
+    height: 330px;
+    border: 1px solid $color-border;
+    text-align: center;
+    .docphoto {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+    }
+    .docyy {
+        display: inline-block;
+        padding: 0 10px;
+        border: 1px solid $theme-color;
+        line-height: 30px;
+        border-radius: 5px;
+        color: $theme-color;
+        cursor: pointer;
+    }
+    .docStop {
+        border: none;
+        line-height: 30px;
+        border-radius: 5px;
+        background-color: #c5c5c5;
+        color: #fff;
+        cursor: pointer;
+    }
+    .goodatMask {
+        @extend .mask;
+        padding: 15px;
+        overflow-x: hidden;
+        border-bottom: 2px solid $the-color-darkgreen;
+        color: #fff;
+        background: rgba(0, 0, 0, 0.4);
+        display: none;
+    }
+    .limited-2:hover {
+        .goodatMask {
+            display: block;
+        }
+    }
+}

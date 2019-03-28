@@ -303,11 +303,16 @@ $theicons:
 .navLink {
     padding-bottom: 10px;
     color: #fff;
+    &:visited {
+       border-bottom: 2px solid white;
+        color: #fff; 
+    }
     &.active,
     &:hover {
         border-bottom: 2px solid white;
         color: #fff;
     }
+    
 }
 
 // 2018.8.9 登录、注册、忘记密码

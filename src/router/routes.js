@@ -49,6 +49,11 @@ const routes = [{
         name: 'fillInfor',
         component: lazyload('fillInfor'),
         meta: {title:'填写信息'}
+    },{
+        path: 'pay',
+        name: 'pay',
+        component: lazyload('pay'),
+        meta: {title:'支付'} 
     }]
 }]
 

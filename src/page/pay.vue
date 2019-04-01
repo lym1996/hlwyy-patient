@@ -64,7 +64,7 @@
                                     </div>
                                     <div class="fontsize30 margintop10" style="color:red;">
                                         <span>请在</span>
-                                        <span style="font-size:40px;" >{{minute}}:{{second}}</span>
+                                        <span style="font-size:40px;" >20分钟</span>
                                         <span>内完成支付</span>
                                     </div>
                                 </div>
@@ -121,10 +121,8 @@ export default {
         this.beforePay()
     },
     methods: {
-        beforePay(){
+        beforePay(){//20分钟倒计时
             if(this.payStatue == 0) {
-                this.minute = 20
-                this.second = 0
                 let timer = setInterval(() => {
                     
                 },1000)

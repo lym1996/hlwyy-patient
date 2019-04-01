@@ -1,7 +1,7 @@
 const lazyload = (name) => (resolve) => require([`@/page/${name}`], resolve)
 const routes = [{
     path:'/',
-    redirect:'/index',
+    redirect:'/home',
     component: lazyload('index'),
     children: [{
         path: 'home',

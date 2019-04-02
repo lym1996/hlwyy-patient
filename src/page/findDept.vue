@@ -36,7 +36,7 @@
                                     <span class="paddingright15 borderright2 bold">科室筛选</span>
                                 </div>
                                 <div class="floatLeft width990 paddingleft10">
-									<span :class="['chooseOption', {'curOption': isAllDept}]" @click="changeDept(-1,-1)">全部</span>
+									<span :class="['chooseOption', {'curOption': isAllDept}]" @click="changeDept(-1)">全部</span>
 									<span v-if="index<6" v-for="(dept, index) in deptlist" :key="index" @click="changeDept(index)" v-html="dept.deptName"
 									:class="['chooseOption', {'curOption': dept.isChecked}]">
 									</span>
@@ -291,12 +291,12 @@ export default {
                 this.isAllDate = true
                 this.dateTime = ''
                 this.dateTimeLong = ''
-                this.getScheduleList()
+                this.getScheduleList()//记得改传参
             }else {
                 this.datelist[index].isChecked = true
                 this.dateTime = this.datelist[index].date
                 this.dateTimeLong = this.datelist[index].dateLong
-                this.getScheduleList()
+                this.getScheduleList()//记得改传参
             }
             console.log('deptName',this.deptName)
             console.log('date',this.dateTime)
@@ -317,7 +317,7 @@ export default {
             console.log('deptName',this.deptName)
             console.log('date',this.dateTime)
             console.log('type',this.timeType)
-            this.getScheduleList()
+            this.getScheduleList()//记得改传参
         }
     },
 }

@@ -272,12 +272,12 @@ export default {
                 this.isAllDate = true
                 this.dateTime = ''
                 this.dateTimeLong = ''
-                this.getScheduleList()
+                this.getScheduleList()//记得改传参
             }else {
                 this.datelist[index].isChecked = true
                 this.dateTime = this.datelist[index].date
                 this.dateTimeLong = this.datelist[index].dateLong
-                this.getScheduleList()
+                this.getScheduleList()//记得改传参
             }
             console.log('deptName',this.deptName)
             console.log('date',this.dateTime)
@@ -298,7 +298,7 @@ export default {
             console.log('deptName',this.deptName)
             console.log('date',this.dateTime)
             console.log('type',this.timeType)
-            this.getScheduleList()
+            this.getScheduleList()//记得改传参
         }
     },
 }

@@ -9,7 +9,8 @@
 					<span class=" lineheight40 bold fontsize16 theme-color-40c7c3">就诊流程</span>
 				</div>
 				<div class="marginleft30 marginright30">
-					<progressno :step="3"></progressno >
+					<progressno v-if="payStatue == 0" :step="3"></progressno >
+                    <progressno v-if="payStatue == 1" :step="4"></progressno>
 				</div>
             </div>
         </div>
@@ -72,7 +73,7 @@
                                 <div class="marginleft100 margintop75" v-if="payStatue == 1">
                                     <img :src="zfcg" alt="" style="vertical-align: middle;">
                                     <span class="fontsize30" style="color:#7fb80e;vertical-align: middle;">支付成功</span><span class="fontsize30" style="vertical-align: middle;">,</span>
-                                    <span class="fontsize30" style="color:red;vertical-align: middle;">{{second}}</span><span class="fontsize30" style="vertical-align: middle;">秒后返回首页！</span>
+                                    <span class="fontsize30" style="color:red;vertical-align: middle;">{{secondback}}</span><span class="fontsize30" style="vertical-align: middle;">秒后返回首页！</span>
                                     <div class="marginleft150 margintop30">
                                         <el-button type="text" @click="backHome"><i class="el-icon-ts-back"></i>返回首页</el-button>
                                     </div>
@@ -99,8 +100,6 @@ export default {
             qrcode:qrcode,
             zfcg:zfcg,
             payStatue:0,
-            minute:20,
-            second:60,
             secondback:5,
             order:{
                 number:11111111111111,
@@ -118,16 +117,8 @@ export default {
     },
     mounted() {
         this.afterPay()
-        this.beforePay()
     },
     methods: {
-        beforePay(){//20分钟倒计时
-            if(this.payStatue == 0) {
-                let timer = setInterval(() => {
-                    
-                },1000)
-            }
-        },
         //到时候方法替换为接口支付完成后 
         afterPay(){
             if(this.payStatue == 1) {

@@ -44,7 +44,7 @@
 									<i class="color-fe9e20">*</i>姓名：
 								</span>
                                 <b-form-input @change="patientInfoChange" v-model="patient.patName" type="text" class="height30 width280 inlineBlock borderRadius5"></b-form-input>
-                                <b-button variant="variant" v-b-modal.modal-center class="theme-bgcolor-40c7c3 color-white width200 marginleft20" @click="open">
+                                <b-button variant="variant" v-b-modal.modal-center class="theme-bgcolor-40c7c3 color-white width200 marginleft20" @click="openPatient">
 										选择就诊人
 								</b-button> 
                                 <b-modal ref="myModalRef" id="modal-center" centered class="choosePerson clear">
@@ -182,7 +182,7 @@ export default {
 
         },
         patientInfoChange(){},
-        open(){
+        openPatient(){//选择就诊人
             if(this.patient.patName == '' || this.patient.idCard == '' || this.patient.patName == '' || this.patient.treatmentCard == '') {
                 this.radioSelected = ''
             }

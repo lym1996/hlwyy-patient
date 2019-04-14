@@ -24,9 +24,9 @@
                         <!-- 预约信息 -->
                         <div class="marginleft30  paddingtop20">
 							<span class="inlineBlock width90 marginleft20 textAlignRight color-959595">科室：</span>
-							<span class="marginleft20 inlineBlock width265">{{doctor.sectionName}}</span>
+							<span class="marginleft20 inlineBlock width265">{{doctor.departName}}</span>
 							<span class="color-959595">费用：</span>
-							<span class="marginleft20 inlineBlock width265 color-fe9e20" >￥{{doctor.regitionPrice}}</span>
+							<span class="marginleft20 inlineBlock width265 color-fe9e20" >￥{{doctor.price}}</span>
 							<span class="color-959595">门诊时间：</span>
 							<span class="marginleft20 inlineBlock width150 marginright100">{{doctor.scheduleDate}}</span>
 							<span class="color-959595 margintop30 inlineBlock marginbottom20 width50 textAlignRight  marginleft35">
@@ -137,13 +137,13 @@ export default {
             zjyy:zjyy,
             radioSelected:'',
             dialogShow:false,
-            doctorId:'',
             doctor: {
-                departName:'随便什么科',
-                price:10,
-                scheduleDate:'2019-03-09',
-                startTime:'08:00',
-                endTime:'12:00'
+                scheduleId:'',
+                departName:'',
+                price:null,
+                scheduleDate:'',
+                startTime:'',
+                endTime:''
             },
             patient:{
                 theName:'',
@@ -162,17 +162,14 @@ export default {
         }
     },
     mounted() {
-        this.getInformation()
+        this.doctor.scheduleId = this.$route.query.scheduleId
+        this.doctor.departName = this.$route.query.sectionName
+        this.doctor.price = this.$route.query.price
+        this.doctor.scheduleDate = this.$route.query.date
+        this.doctor.startTime = this.$route.query.startTime
+        this.doctor.endTime = this.$route.query.endTime
     },
     methods: {
-        getInformation(){
-            this.doctorId = this.$route.query.docId
-            axion.getDoc(this.doctorId).then(res => {
-                if(res.data.retCode == 0) {
-                    this.doctor = res.data.param
-                }
-            })
-        },
         getPatient(){
             axion.getPatient(this.token,0).then( res => {
                 if(res.data.retCode == 0) {
@@ -210,13 +207,41 @@ export default {
             this.$refs.myModalRef.hide()
         },
         save(){//保存新增就诊人
-            this.dialogShow = false
-            this.getPatient()
-            this.$refs.myModalRef.show()
+            let param = {
+                theName:this.addPatient.theName,
+                cardId:this.addPatient.cardId,
+                patientPhone:this.addPatient.patientPhone,
+                patientCard:this.addPatient.patientCard,
+                token:this.token,
+                type:0
+            }
+            axion.addPatient(param).then(res => {
+                if(res.data.retCode == 0) {
+                    this.getPatient()
+                    this.$message.success('保存就诊人成功')
+                }else {
+                    this.$message.warning('保存失败')
+                }
+                this.dialogShow = false
+                this.$refs.myModalRef.show()
+            })
         },
         upAppointment(){//提交预约
             //成功后跳转
-            this.$router.push({ path:'pay' , query:{} })//传预约订单信息
+            let param = {
+                token:this.token,
+                patientId:this.patient.id,
+                registionId:this.doctor.scheduleId
+            }
+            axion.registion(param).then(res => {
+                if( res.data.retCode == 0) {
+                    this.$message.success('预约成功')
+                     this.$router.push({ path:'pay' , query:{patientId:this.patient.id,scheduleId:this.doctor.scheduleId} })
+                }else {
+                    this.$message.warning(res.data.retInfo)
+                }
+            })
+           //传预约订单信息
         },
         cancel(){//取消预约
             this.$router.push({ path:'home'})

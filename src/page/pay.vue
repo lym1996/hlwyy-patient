@@ -25,28 +25,24 @@
                         <div class="clear margintop20 marginleft200 marginright30 marginbottom20">
                             <div class="floatLeft fontsize16">
                                 <div class="marginleft20 marginbottom20">
-                                    <span class="width90 textAlignRight ">预约号：</span>
-                                    <span class="marginleft20 width265 color-959595">{{order.number}}</span>
-                                </div>
-                                <div class="marginleft20 marginbottom20">
                                     <span class="width90 textAlignRight ">姓名：</span>
-                                    <span class="marginleft20 width265 color-959595">{{order.patName}}</span>
+                                    <span class="marginleft20 width265 color-959595">{{order.theName}}</span>
                                 </div>
                                 <div class="marginleft20 marginbottom20">
                                     <span class="width90 textAlignRight ">手机号：</span>
-                                    <span class="marginleft20 width265 color-959595">{{order.phone}}</span>
+                                    <span class="marginleft20 width265 color-959595">{{order.patientPhone}}</span>
                                 </div>
                                 <div class="marginleft20 marginbottom20">
                                     <span class="width90 textAlignRight ">就诊卡号：</span>
-                                    <span class="marginleft20 width265 color-959595">{{order.treatmentCard}}</span>
+                                    <span class="marginleft20 width265 color-959595">{{order.patientCard}}</span>
                                 </div>
                                 <div class="marginleft20 marginbottom20">
                                     <span class="width90 textAlignRight ">就诊科室：</span>
-                                    <span class="marginleft20 width265 color-959595">{{order.departName}}</span>
+                                    <span class="marginleft20 width265 color-959595">{{order.sectionName}}</span>
                                 </div>
                                 <div class="marginleft20 marginbottom20">
                                     <span class="width90 textAlignRight ">门诊时间：</span>
-                                    <span class="marginleft20 width265 color-959595">{{order.scheduleDate}}</span>
+                                    <span class="marginleft20 width265 color-959595">{{order.registionDate}}</span>
                                 </div>
                                 <div class="marginleft20 marginbottom20">
                                     <span class="width90 textAlignRight ">选择时间：</span>
@@ -58,7 +54,7 @@
                                 <div class="marginleft100" v-if="payStatue == 0">
                                     <div class="marginleft105 fontsize16 marginbottom20">
                                         支付费用：
-                                        <span class="color-fe9e20">￥{{order.price}}</span>
+                                        <span class="color-fe9e20">￥{{order.regitionPrice}}</span>
                                     </div>
                                     <div class="marginleft80">
                                         <img :src="qrcode" alt="" width="160" height="160">
@@ -70,7 +66,7 @@
                                     </div>
                                 </div>
                                 <!-- 支付成功 -->  
-                                <div class="marginleft100 margintop75" v-if="payStatue == 1">
+                                <div class="marginleft margintop75" v-if="payStatue == 1">
                                     <img :src="zfcg" alt="" style="vertical-align: middle;">
                                     <span class="fontsize30" style="color:#7fb80e;vertical-align: middle;">支付成功</span><span class="fontsize30" style="vertical-align: middle;">,</span>
                                     <span class="fontsize30" style="color:red;vertical-align: middle;">{{secondback}}</span><span class="fontsize30" style="vertical-align: middle;">秒后返回首页！</span>
@@ -91,34 +87,52 @@ import zjyy from '../assets/img/configImg/zjyybanner40c7c3.png'
 import qrcode from '../assets/img/qrCode.png'
 import zfcg from '../assets/img/UI-May18/icon-success.png'
 import progressno from '../components/progressno'
-import { setInterval, clearInterval } from 'timers';
+import axion from '@/util/api.js'
+const hospitalId = 123456
 export default {
     components: { progressno },
     data() {
         return {
+            token:localStorage.getItem('user_token'),
             zjyy:zjyy,
             qrcode:qrcode,
             zfcg:zfcg,
             payStatue:0,
             secondback:5,
-            order:{
-                number:11111111111111,
-                patName:'阿达是的',
-                phone:'1321321123',
-                treatmentCard:'4123133',
-                departName:'就看见',
-                price:'10',
-                scheduleDate:'2019-03-09',
-                startTime:'08:00',
-                endTime:'12:00',
-
-            }
+            patientId:'',
+            scheduleId:'',
+            order:{}
         }
     },
     mounted() {
-        this.afterPay()
+        this.patientId = this.$route.query.patientId
+        this.scheduleId = this.$route.query.scheduleId
+        console.log(this.scheduleId,'this.....')
+        this.getInformation()
     },
     methods: {
+        getInformation() {
+            let param = {
+                token:this.token,
+                patientId:this.patientId,
+                type:0
+            }
+            axion.registionList(param).then(res => {
+                if(res.data.retCode == 0) {
+                    for(let i = 0;i<res.data.param.length;i++) {
+                        if(res.data.param[i].registionDoctorSchedulingId == this.scheduleId) {
+                            this.order = res.data.param[i]
+                            console.log(this.order.theName,'order')
+                            setTimeout(()=>{
+                                this.payStatue = 1
+                                this.afterPay()
+                            },10000)
+                        }
+                    }
+                    
+                }
+            })
+        },
         //到时候方法替换为接口支付完成后 
         afterPay(){
             if(this.payStatue == 1) {

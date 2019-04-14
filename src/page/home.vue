@@ -88,7 +88,7 @@
                         </div>
                     </div>
                 </div>
-                <doc :doclist="doclist" :sectionId="deptName" :timeType="timeType" :date="dateTimeLong"></doc>
+                <doc :doclist="doclist"></doc>
             </div>
         </div>
     </div>
@@ -107,11 +107,6 @@ export default {
         return {
             deptlist:[],
             datelist:[
-                {
-                    isChecked:false,
-                    date:'04月14日',
-                    dateLong:'2019-04-14'
-                    },
                 {
                     isChecked:false,
                     date:'04月15日',
@@ -141,6 +136,11 @@ export default {
                     isChecked:false,
                     date:'04月20日',
                     dateLong:'2019-04-20'
+                    },
+                {
+                    isChecked:false,
+                    date:'04月21日',
+                    dateLong:'2019-04-21'
                     },
                 ],
                 

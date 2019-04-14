@@ -66,6 +66,10 @@ const getDaySchdule = (departmentId,timeType,date) => get('/scheduling/getByDate
 const updateSchdule = (param) => post('/scheduling/updateScheduling',param)
 //获取医生信息
 const getDoc = (doctorId) => get('/doctor/get?doctorId='+doctorId)
+//挂号
+const registion = (param) => post('/registion/add',param)
+//查看挂号信息
+const registionList = (param) => post('/registion/list',param)
 //暴露接口
 export default {
     baseURL,
@@ -85,5 +89,7 @@ export default {
     editPatient,
     addPatient,
     deletePatient,
-    getDoc
+    getDoc,
+    registion,
+    registionList
 }

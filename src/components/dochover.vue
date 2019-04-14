@@ -23,7 +23,7 @@
                         <p class="margintop5 marginleft20" v-html="doc.specialty">{{doc.specialty}}</p>
                     </el-scrollbar>
                     </div>
-                    <span v-if="doc.registionNum > 0" @click="gofillInfor()" class="margin15X docyy" style="padding:0px 105px;">预约</span>
+                    <span v-if="doc.registionNum > 0" @click="gofillInfor(doc)" class="margin15X docyy" style="padding:0px 105px;">预约</span>
                     <span v-else class="margin15X docyy">暂无号源</span>
                 </section>
             </div>
@@ -40,7 +40,7 @@ export default {
             haveDoc:true
         }
     },
-    props: ["doclist","sectionId","timeType","date"],
+    props: ["doclist"],
     watch: {
         doclist() {
             if(this.doclist.length > 0) {
@@ -51,8 +51,8 @@ export default {
         }
     },
     methods: {
-        gofillInfor(){
-            this.$router.push({ path:'fillInfor' , query:{sectionId:this.sectionId,timeType:this.timeType,date:this.date} })
+        gofillInfor(doc){
+            this.$router.push({ path:'fillInfor' , query:{sectionName:doc.sectionName,price:doc.regitionPrice,date:doc.registionDate,startTime:doc.startTime,endTime:doc.endTime,scheduleId:doc.registionDoctorScheduling} })
         },
     },
 }

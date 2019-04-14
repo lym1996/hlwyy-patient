@@ -35,9 +35,11 @@ export default {
             nodoc:nodoc
         }
     },
+    mounted() {
+    },
     methods: {
         gofillInfor(doc) {
-            this.$router.push({ path:'fillInfor', query: {sectionId:this.sectionId,timeType:this.timeType,date:this.date}})
+            this.$router.push({ path:'fillInfor', query: {sectionName:doc.sectionName,price:doc.regitionPrice,date:doc.registionDate,startTime:doc.startTime,endTime:doc.endTime,scheduleId:doc.registionDoctorScheduling}})
         }
     },
     props:["doclist"]

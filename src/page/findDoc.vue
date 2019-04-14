@@ -72,7 +72,7 @@
 								</div>
 							</div>
                         </div>
-                        <dochover :doclist="doclist" :sectionId="deptName" :timeType="timeType" :date="dateTimeLong"></dochover>
+                        <dochover :doclist="doclist" ></dochover>
                     </div>
                 </div>
             </div>
@@ -102,11 +102,6 @@ export default {
             datelist:[
                 {
                     isChecked:false,
-                    date:'04月14日',
-                    dateLong:'2019-04-14'
-                    },
-                {
-                    isChecked:false,
                     date:'04月15日',
                     dateLong:'2019-04-15'
                     },
@@ -134,6 +129,11 @@ export default {
                     isChecked:false,
                     date:'04月20日',
                     dateLong:'2019-04-20'
+                    },
+                    {
+                    isChecked:false,
+                    date:'04月21日',
+                    dateLong:'2019-04-21'
                     },
                 ],
                 datenoon:[

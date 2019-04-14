@@ -54,6 +54,7 @@
 export default {
     data() {
         return {
+            token:localStorage.getItem('user_token'),
             statue:'',
             status:[{
                 value:0,
@@ -92,10 +93,28 @@ export default {
             }]
         }
     },
+    mounted() {
+        
+    },
     methods: {
         gotoPay(){
             this.$router.push({ path:'/pay' , query:{}})
         }
     },
+    beforeRouteEnter (to, from, next) {
+        let token = localStorage.getItem('user_token')
+        if(token == null){
+            // this.$message.warning('请先登录账号')
+            // this.$router.push('/')
+        }
+        next( vm => {
+            if(token == null) {
+                vm.$router.push('/')
+                vm.$message.warning('请先登陆账号')
+            }
+        }
+
+        );
+    }
 }
 </script>

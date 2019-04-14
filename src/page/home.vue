@@ -58,7 +58,7 @@
                         </div>
                         <div class="floatLeft width760 paddingleft10">
                             <span :class="['chooseOption', {'curOption': isAllDept}]" @click="changeDept(-1)">全部</span>
-                            <span v-for="(dept,index) in deptlist" :key="index" @click="changeDept(index)" v-html="dept.deptName"
+                            <span v-for="(dept,index) in deptlist" :key="index" @click="changeDept(index)" v-html="dept.sectionName"
                             :class="['chooseOption', {'curOption': dept.isChecked}]">
                             </span>
                         </div>
@@ -82,13 +82,13 @@
                         </div>
                         <div class="floatLeft width760 paddingleft10">
                             <span :class="['chooseOption', {'curOption': isAllNoon}]" @click="changeDateType(-1)">全部</span>
-                            <span v-for="(time,index) in datenoon" :key="index" @click="changeDateType(index)" v-html="time.timeType==0?'上午':(time.timeType==1?'下午':'晚上')"
+                            <span v-for="(time,index) in datenoon" :key="index" @click="changeDateType(index)" v-html="time.timeType==1?'上午':(time.timeType==2?'下午':'晚上')"
                             :class="['chooseOption', {'curOption': time.isChecked}]">
                             </span>
                         </div>
                     </div>
                 </div>
-                <doc :doclist="doclist"></doc>
+                <doc :doclist="doclist" :sectionId="deptName" :timeType="timeType" :date="dateTimeLong"></doc>
             </div>
         </div>
     </div>
@@ -99,127 +99,61 @@ import process from '../components/process'
 import dept from '../components/dept'
 import helplist from '../components/helplist'
 import doc from "../components/doc";
+import axion from '@/util/api.js'
+const hospitalId = 123456
 export default {
     components: { carousel, process, dept, helplist, doc },
     data() {
         return {
-            deptlist:[
-                {   
-                    isChecked:false,
-                    departmentLogo:'http://diagnose.zwjk.com/upload/2018/09/04/1536037595623.svg',
-                    deptName:'精神卫生科'
-                },
-                {   
-                    isChecked:false,
-                    departmentLogo:'http://diagnose.zwjk.com/upload/2018/09/04/1536037607099.svg',
-                    deptName:'内分泌科'
-                },
-                {   
-                    isChecked:false,
-                    departmentLogo:'http://diagnose.zwjk.com/upload/2018/09/04/1536037659796.svg',
-                    deptName:'肾脏科'
-                },
-                {   
-                    isChecked:false,
-                    departmentLogo:'http://diagnose.zwjk.com/upload/2018/09/04/1536037576766.svg ',
-                    deptName:'呼吸内科'
-                },
-                {
-                    isChecked:false,
-                    departmentLogo:'http://diagnose.zwjk.com/upload/2018/09/04/1536037637256.svg',
-                    deptName:'神经内科'
-                },
-                {
-                    isChecked:false,
-                    departmentLogo:'http://diagnose.zwjk.com/upload/2018/09/04/1536033947456.svg',
-                    deptName:'心血管内科'
-                },
-            ],
+            deptlist:[],
             datelist:[
+                {
+                    isChecked:false,
+                    date:'04月14日',
+                    dateLong:'2019-04-14'
+                    },
+                {
+                    isChecked:false,
+                    date:'04月15日',
+                    dateLong:'2019-04-15'
+                    },
+                {
+                    isChecked:false,
+                    date:'04月16日',
+                    dateLong:'2019-04-16'
+                    },
+                {
+                    isChecked:false,
+                   date: '04月17日',
+                   dateLong:'2019-04-17'
+                    },
+                {
+                    isChecked:false,
+                    date:'04月18日',
+                    dateLong:'2019-04-18'
+                    },
+                {
+                    isChecked:false,
+                    date:'04月19日',
+                    dateLong:'2019-04-19'
+                    },
                 {   
                     isChecked:false,
-                    date:'03月27日',
-                    dateLong:'2019-03-27'
+                    date:'04月20日',
+                    dateLong:'2019-04-20'
                     },
-                {
-                    isChecked:false,
-                    date:'03月28日',
-                    dateLong:'2019-03-28'
-                    },
-                {
-                    isChecked:false,
-                    date:'03月29日',
-                    dateLong:'2019-03-29'
-                    },
-                {
-                    isChecked:false,
-                    date:'03月30日',
-                    dateLong:'2019-03-30'
-                    },
-                {
-                    isChecked:false,
-                   date: '03月31日',
-                   dateLong:'2019-03-31'
-                    },
-                {
-                    isChecked:false,
-                    date:'04月01日',
-                    dateLong:'2019-04-01'
-                    },
-                {
-                    isChecked:false,
-                    date:'04月02日',
-                    dateLong:'2019-04-02'
-                    }
                 ],
+                
                 datenoon:[
                     {
                         isChecked:false,
-                        timeType:0
+                        timeType:1
                     },{
                         isChecked:false,
-                        timeType:1
+                        timeType:2
                     }
                 ],
-                doclist:[
-                    {
-                        doctorName:'爽肤水',
-                        departmentName:'服务发给我',
-                        level:'范围分为',
-                        specialty:'违法未访问各位哥哥哥日格格热GV额度GV而过的GV反而GV额GV额GV额GV嗯嗯不好惹GV被告VB而GV额',
-                        sourceNum:10,
-                        scheduleDate:'3月18日',
-                        startTime:'8:00',
-                        endTime:'12:00'
-                    },{
-                        doctorName:'爽肤水',
-                        departmentName:'服务发给我',
-                        level:'范围分为',
-                        specialty:'违法未访问各位哥哥哥日格格热GV额度GV而过的GV反而GV额GV额GV额GV嗯嗯不好惹GV被告VB而GV额',
-                        sourceNum:10,
-                        scheduleDate:'3月18日',
-                        startTime:'8:00',
-                        endTime:'12:00'
-                    },{
-                        doctorName:'爽肤水',
-                        departmentName:'服务发给我',
-                        level:'范围分为',
-                        specialty:'违法未访问各位哥哥哥日格格热GV额度GV而过的GV反而GV额GV额GV额GV嗯嗯不好惹GV被告VB而GV额',
-                        sourceNum:10,
-                        scheduleDate:'3月18日',
-                        startTime:'8:00',
-                        endTime:'12:00'
-                    },{
-                        doctorName:'爽肤水',
-                        departmentName:'服务发给我',
-                        level:'范围分为',
-                        specialty:'违法未访问各位哥哥哥日格格热GV额度GV而过的GV反而GV额GV额GV额GV嗯嗯不好惹GV被告VB而GV额',
-                        sourceNum:10,
-                        scheduleDate:'3月18日',
-                        startTime:'8:00',
-                        endTime:'12:00'
-                    },
-                ],
+                doclist:[],
             isAllDept:true,
             isAllDate:true,
             isAllNoon:true,
@@ -229,8 +163,145 @@ export default {
             dateTimeLong:'',
         }
     },
+    mounted() {
+        this.getDept()
+    },
     methods: {
-        getScheduleList(){},//形参：科室名或者科室Id、排班日期、上午还是下午
+        getDept(){
+            axion.getDept(hospitalId).then( res => {
+                if(res.data.retCode == 0) {
+                    for(let i = 0;i<res.data.param.length;i++) {
+                        res.data.param[i].isChecked = false
+                    }
+                    this.deptlist = res.data.param
+                    this.getScheduleList(this.deptName,this.dateTimeLong,this.timeType)
+                }
+            })
+        },
+        getScheduleList(deptId,date,timeType){
+            this.doclist = []
+            console.log('deptId',deptId,'|','date',date,'|','timeType',timeType)
+            if(deptId == '' && date == ''){
+                let param = {
+                    sectionId:0,
+                    type:2
+                }
+                axion.getWeekSchdule(param.sectionId,param.type).then( res => {
+                    if(res.data.retCode == 0) {
+                        if(timeType == 1 ){
+                            this.doclist = res.data.param.amList
+                        }else if(timeType == 2) {
+                            this.doclist = res.data.param.pmList
+                        }else {
+                            let a = res.data.param.amList.concat(res.data.param.pmList)
+                            this.doclist = a
+                        }
+                        
+                    }
+                })
+            }else if (deptId == '' && date != ''){
+                let param = {
+                    sectionId:0,
+                    type:2
+                }
+                axion.getWeekSchdule(param.sectionId,param.type).then( res => {
+                    if(res.data.retCode == 0) {
+                        if(timeType == '') {
+                            for(let i= 0;i<res.data.param.amList.length;i++){
+                                if(date == res.data.param.amList[i].registionDate){
+                                    this.doclist.push(res.data.param.amList[i])
+                                }
+                            }
+                            for(let i= 0;i<res.data.param.pmList.length;i++){
+                                if(date == res.data.param.pmList[i].registionDate){
+                                    this.doclist.push(res.data.param.pmList[i])
+                                }
+                            }
+                            
+                        }else if(timeType == 1 ){
+                            for(let i= 0;i<res.data.param.amList.length;i++){
+                                if(date == res.data.param.amList[i].registionDate){
+                                    this.doclist.push(res.data.param.amList[i])
+                                }
+                            }
+                        }else if(timeType == 2) {
+                            for(let i= 0;i<res.data.param.pmList.length;i++){
+                                if(date == res.data.param.pmList[i].registionDate){
+                                    this.doclist.push(res.data.param.pmList[i])
+                                }
+                            }
+                        }
+                        
+                    }
+                })
+            }else if(deptId != '' && date == '') {
+                let param = {
+                    sectionId:0,
+                    type:2
+                }
+                axion.getWeekSchdule(param.sectionId,param.type).then( res => {
+                    if(res.data.retCode == 0) {
+                        if(timeType == '') {
+                            for(let i= 0;i<res.data.param.amList.length;i++){
+                                if(deptId == res.data.param.amList[i].sectionId){
+                                    this.doclist.push(res.data.param.amList[i])
+                                }
+                            }
+                            for(let i= 0;i<res.data.param.pmList.length;i++){
+                                if(deptId == res.data.param.pmList[i].sectionId){
+                                    this.doclist.push(res.data.param.pmList[i])
+                                }
+                            }
+                        }else if(timeType == 1) {
+                            for(let i= 0;i<res.data.param.amList.length;i++){
+                                if(deptId == res.data.param.amList[i].sectionId){
+                                    this.doclist.push(res.data.param.amList[i])
+                                }
+                            }
+                        }else if(timeType == 2) {
+                            for(let i= 0;i<res.data.param.pmList.length;i++){
+                                if(deptId == res.data.param.pmList[i].sectionId){
+                                    this.doclist.push(res.data.param.pmList[i])
+                                }
+                            }
+                        }
+                        console.log(this.doclist)
+                    }
+                })
+            }else if(deptId != '' && date != ''){
+                let param = {
+                    sectionId:deptId,
+                    timeType:timeType,
+                    date:date
+                }
+                let param2 = {
+                    sectionId:0,
+                    type:2
+                }
+                if(timeType == ''){
+                    axion.getWeekSchdule(param2.sectionId,param2.type).then( res => {
+                        if(res.data.retCode == 0) {
+                            for(let i= 0;i<res.data.param.amList.length;i++){
+                                if(deptId == res.data.param.amList[i].sectionId && date == res.data.param.pmList[i].registionDate){
+                                    this.doclist.push(res.data.param.amList[i])
+                                }
+                            }
+                            for(let i= 0;i<res.data.param.pmList.length;i++){
+                                if(deptId == res.data.param.pmList[i].sectionId && date == res.data.param.pmList[i].registionDate){
+                                    this.doclist.push(res.data.param.pmList[i])
+                                }
+                            }
+                        }
+                    })
+                }else if(timeType != '') {
+                    axion.getDaySchdule(param.sectionId,param.timeType,param.date).then( res => {
+                        if(res.data.retCode == 0) {
+                            this.doclist = res.data.param.schedulingList
+                        }
+                    })
+                }
+            }
+        },
         changeDept(index){
             this.isAllDept = false
             // this.isAllDate = true
@@ -243,12 +314,9 @@ export default {
                 this.deptName = ''
             }else {
                 this.deptlist[index].isChecked = true
-                this.deptName = this.deptlist[index].deptName
+                this.deptName = this.deptlist[index].sectionId
             }
-            console.log('deptName',this.deptName)
-            console.log('dateTime',this.dateTime)
-            console.log('timeType',this.timeType)
-            this.getScheduleList()//查询该科室排班
+            this.getScheduleList(this.deptName,this.dateTimeLong,this.timeType)//查询该科室排班
         },
         changeDateTime(index){
             this.isAllDate = false
@@ -258,18 +326,14 @@ export default {
             })
             if(index < 0) {
                 this.isAllDate = true
-                this.dateTime = '' //行如 3月08日
+                this.dateTime = '' //形如 3月08日
                 this.dateTimeLong = '' //形如 2019-03-08
-                this.getScheduleList()
             }else {
                 this.datelist[index].isChecked = true
                 this.dateTime = this.datelist[index].date
                 this.dateTimeLong = this.datelist[index].dateLong
-                this.getScheduleList()
             }
-            console.log('deptName',this.deptName)
-            console.log('dateTime',this.dateTime)
-            console.log('timeType',this.timeType)
+            this.getScheduleList(this.deptName,this.dateTimeLong,this.timeType)
         },
         changeDateType(index){
             this.isAllNoon = false
@@ -283,10 +347,7 @@ export default {
                 this.datenoon[index].isChecked = true
                 this.timeType = this.datenoon[index].timeType
             }
-            this.getScheduleList()
-            console.log('deptName',this.deptName)
-            console.log('dateTime',this.dateTime)
-            console.log('timeType',this.timeType)
+            this.getScheduleList(this.deptName,this.dateTimeLong,this.timeType)
         },
         wzmy(){
             this.$router.push({ path:'findDoc'})

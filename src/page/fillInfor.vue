@@ -24,9 +24,9 @@
                         <!-- 预约信息 -->
                         <div class="marginleft30  paddingtop20">
 							<span class="inlineBlock width90 marginleft20 textAlignRight color-959595">科室：</span>
-							<span class="marginleft20 inlineBlock width265">{{doctor.departName}}</span>
+							<span class="marginleft20 inlineBlock width265">{{doctor.sectionName}}</span>
 							<span class="color-959595">费用：</span>
-							<span class="marginleft20 inlineBlock width265 color-fe9e20" >￥{{doctor.price}}</span>
+							<span class="marginleft20 inlineBlock width265 color-fe9e20" >￥{{doctor.regitionPrice}}</span>
 							<span class="color-959595">门诊时间：</span>
 							<span class="marginleft20 inlineBlock width150 marginright100">{{doctor.scheduleDate}}</span>
 							<span class="color-959595 margintop30 inlineBlock marginbottom20 width50 textAlignRight  marginleft35">
@@ -43,7 +43,7 @@
                                 <span class="inlineBlock width90 marginleft20 textAlignRight">
 									<i class="color-fe9e20">*</i>姓名：
 								</span>
-                                <b-form-input @change="patientInfoChange" v-model="patient.patName" type="text" class="height30 width280 inlineBlock borderRadius5"></b-form-input>
+                                <b-form-input @change="patientInfoChange" v-model="patient.theName" type="text" class="height30 width280 inlineBlock borderRadius5"></b-form-input>
                                 <b-button variant="variant" v-b-modal.modal-center class="theme-bgcolor-40c7c3 color-white width200 marginleft20" @click="openPatient">
 										选择就诊人
 								</b-button> 
@@ -59,9 +59,9 @@
 											<label v-for="(infor,index) in inforlist" :key="index" :for="'theradio' + index" @click="changePatient(infor)"
 											class="borderbottom padding30X cursorPointer flex-align-spacebetween lineheight30">
 												<div class="flex-spacebetween">
-													<div class="width100 itemflex-00auto theme-color-40c7c3 fontsize18">{{infor.patName}}</div>
+													<div class="width100 itemflex-00auto theme-color-40c7c3 fontsize18">{{infor.theName}}</div>
 													<div>
-														<p>身份证号：{{infor.idCard}}</p>
+														<p>身份证号：{{infor.cardId}}</p>
 													</div>
 												</div>
 												<div class="marginleft20" style="height: 28px">
@@ -80,17 +80,17 @@
                                 <span class="inlineBlock width90 marginleft20 textAlignRight">
 						            <i class="color-fe9e20">*</i>身份证号：
 					            </span>
-					            <b-form-input @change="patientInfoChange" v-model="patient.idCard" type="text" class="height30 width280 inlineBlock borderRadius5"></b-form-input>
+					            <b-form-input @change="patientInfoChange" v-model="patient.cardId" type="text" class="height30 width280 inlineBlock borderRadius5"></b-form-input>
                             </div>
                             <div class="margintop20">
 				            	<span class="inlineBlock width90 marginleft20 textAlignRight">
 				            		<i class="color-fe9e20">*</i>手机号：
 				            	</span>
-				            	<b-form-input @change="patientInfoChange" v-model="patient.phone" type="text" class="height30 width280 inlineBlock borderRadius5"></b-form-input>
+				            	<b-form-input @change="patientInfoChange" v-model="patient.patientPhone" type="text" class="height30 width280 inlineBlock borderRadius5"></b-form-input>
 				            </div>
                             <div class="margintop20">
 				            	<span class="inlineBlock width90 marginleft20 textAlignRight">就诊卡号：</span>
-				            	<b-form-input @change="patientInfoChange" v-model="patient.treatmentCard" type="text" class="height30 width280 inlineBlock borderRadius5"></b-form-input>
+				            	<b-form-input @change="patientInfoChange" v-model="patient.patientCard" type="text" class="height30 width280 inlineBlock borderRadius5"></b-form-input>
 				            </div>
                             <div class="marginleft110 margintop20 marginbottom35">
 		                    	<button class="minwidth110 btn commonSureBtn" @click="upAppointment">提交预约</button>
@@ -105,19 +105,19 @@
             <form>
                 <div class="formItem margintop20 flex-align">
                   <label class="formLabel"><i class="required">*</i>姓名</label>
-                  <input v-model="addPatient.patName" class="formInput" placeholder="请输入姓名"/>
+                  <input v-model="addPatient.theName" class="formInput" placeholder="请输入姓名"/>
                 </div>
                 <div class="formItem margintop20 flex-align">
                   <label class="formLabel"><i class="required">*</i>身份证</label>
-                  <input v-model="addPatient.idcard" class="formInput" placeholder="请输入身份证号"/>
+                  <input v-model="addPatient.cardId" class="formInput" placeholder="请输入身份证号"/>
                 </div>
                 <div class="formItem margintop20 flex-align">
                   <label class="formLabel"><i class="required">*</i>手机号</label>
-                  <input v-model="addPatient.phone" class="formInput" placeholder="请输入手机号"/>
+                  <input v-model="addPatient.patientPhone" class="formInput" placeholder="请输入手机号"/>
                 </div>
                 <div class="formItem margintop20 flex-align">
                   <label class="formLabel"><i class="required"></i>就诊卡号</label>
-                  <input v-model="addPatient.treatmentCard" class="formInput" placeholder="请输入就诊卡号"/>
+                  <input v-model="addPatient.patientCard" class="formInput" placeholder="请输入就诊卡号"/>
                 </div>
                 <button type="button" class="margintop40 theBtn width110" style="margin-left:40%;" @click="save">保存</button>
             </form>
@@ -127,13 +127,17 @@
 <script>
 import zjyy from '../assets/img/configImg/zjyybanner40c7c3.png'
 import progressno from '../components/progressno'
+import axion from '@/util/api.js'
+const hospitalId = 123456
 export default {
     components: { progressno },
     data() {
         return {
+            token:localStorage.getItem('user_token'),
             zjyy:zjyy,
             radioSelected:'',
             dialogShow:false,
+            doctorId:'',
             doctor: {
                 departName:'随便什么科',
                 price:10,
@@ -142,48 +146,44 @@ export default {
                 endTime:'12:00'
             },
             patient:{
-                patName:'',
-                idCard:'',
-                phone:'',
-                treatmentCard:''
+                theName:'',
+                cardId:'',
+                patientPhone:'',
+                patientCard:''
             },
             addPatient:{
-                patName:'',
-                idCard:'',
-                phone:'',
-                treatmentCard:''
+                theName:'',
+                cardId:'',
+                patientPhone:'',
+                patientCard:''
             },
             gdPatient:{},//过度就诊人选择
-            inforlist:[//就诊人列表
-                {
-                    patName:'dadad',
-                    idCard:'123123123123231',
-                    phone:'18868342816',
-                    treatmentCard:'6545645645656'
-                },{
-                    patName:'eqeqe',
-                    idCard:'123123123123231',
-                    phone:'18868342816',
-                    treatmentCard:'6545645645656'
-                },{
-                    patName:'qeqeqe',
-                    idCard:'123123123123231',
-                    phone:'18868342816',
-                    treatmentCard:'6545645645656'
-                }
-            ]
+            inforlist:[]//就诊人列表
         }
     },
     mounted() {
-        this.getPatient()
+        this.getInformation()
     },
     methods: {
+        getInformation(){
+            this.doctorId = this.$route.query.docId
+            axion.getDoc(this.doctorId).then(res => {
+                if(res.data.retCode == 0) {
+                    this.doctor = res.data.param
+                }
+            })
+        },
         getPatient(){
-
+            axion.getPatient(this.token,0).then( res => {
+                if(res.data.retCode == 0) {
+                    this.inforlist = res.data.param
+                }
+            })
         },
         patientInfoChange(){},
         openPatient(){//选择就诊人
-            if(this.patient.patName == '' || this.patient.idCard == '' || this.patient.patName == '' || this.patient.treatmentCard == '') {
+            this.getPatient()
+            if(this.patient.theName == '' || this.patient.cardId == '' || this.patient.patientPhone == '' || this.patient.patientCard == '') {
                 this.radioSelected = ''
             }
         },
@@ -194,10 +194,10 @@ export default {
         closePatient(){//关闭就诊人选择界面
             this.gdPatient = {}
             this.$refs.myModalRef.hide()
-            this.patient.patName = ''
-            this.patient.idCard = ''
-            this.patient.phone = ''
-            this.patient.treatmentCard = ''
+            this.patient.theName = ''
+            this.patient.cardId = ''
+            this.patient.patientPhone = ''
+            this.patient.patientCard = ''
             console.log('333',this.gdPatient)
         },
         chosePatient(){//选择就诊人确定

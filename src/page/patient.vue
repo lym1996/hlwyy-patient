@@ -7,14 +7,14 @@
         <div class="marginX30 margintop15">
             <el-row>
                 <el-table :data="tabledata" border stripe tooltip-effect="dark" style="width:100%;">
-                    <el-table-column prop="patName" label="姓名" align="center"></el-table-column>
-                    <el-table-column prop="Idcard" label="身份证" align="center"></el-table-column>
-                    <el-table-column prop="jzId" label="就诊卡号" align="center"></el-table-column>
-                    <el-table-column prop="phone" label="手机号" align="center"></el-table-column>
+                    <el-table-column prop="theName" label="姓名" align="center"></el-table-column>
+                    <el-table-column prop="cardId" label="身份证" align="center"></el-table-column>
+                    <el-table-column prop="patientCard" label="就诊卡号" align="center"></el-table-column>
+                    <el-table-column prop="patientPhone" label="手机号" align="center"></el-table-column>
                     <el-table-column label="操作" align="center">
                         <template slot-scope="scope">
                             <el-button type="text" @click="edit(scope.row)">编辑</el-button>
-                            <el-button type="text" @click="delete(scope.row)">删除</el-button>
+                            <el-button type="text" @click="isDelete(scope.row)">删除</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -24,19 +24,19 @@
             <form>
                 <div class="formItem margintop20 flex-align">
                   <label class="formLabel"><i class="required">*</i>姓名</label>
-                  <input v-model="patName" class="formInput" placeholder="请输入姓名">
+                  <input v-model="theName" class="formInput" placeholder="请输入姓名">
                 </div>
                 <div class="formItem margintop20 flex-align">
                   <label class="formLabel"><i class="required">*</i>身份证</label>
-                  <input v-model="Idcard" class="formInput" placeholder="请输入身份证号">
+                  <input v-model="cardId" class="formInput" placeholder="请输入身份证号">
                 </div>
                 <div class="formItem margintop20 flex-align">
                   <label class="formLabel"><i class="required">*</i>手机号</label>
-                  <input v-model="phone" class="formInput" placeholder="请输入手机号">
+                  <input v-model="patientPhone" class="formInput" placeholder="请输入手机号">
                 </div>
                 <div class="formItem margintop20 flex-align">
                   <label class="formLabel"><i class="required"></i>就诊卡号</label>
-                  <input v-model="jzId" class="formInput" placeholder="请输入就诊卡号">
+                  <input v-model="patientCard" class="formInput" placeholder="请输入就诊卡号">
                 </div>
                 <button type="button" class="margintop40 marginleft160 theBtn width110" @click="save">保存</button>
             </form>
@@ -44,62 +44,123 @@
     </div>
 </template>
 <script>
+import axion from '@/util/api.js'
+const hospitalId = 123456
 export default {
     data() {
         return {
+            token:localStorage.getItem('user_token'),
             title:'',
             dialogShow:false,
-            patName:'',
-            Idcard:'',
-            phone:'',
-            jzId:'',
-            tabledata:[{
-                patName:'啊大大',
-                Idcard:'15131313213233132132',
-                jzId:'131313231',
-                phone:'18898978789',
-            },{
-                patName:'啊大大',
-                Idcard:'1231321236546544556465',
-                jzId:'2312323321132',
-                phone:'132131313',
-            },{
-                patName:'非凡哥',
-                Idcard:'1321323231132132132132',
-                jzId:'12312313213211',
-                phone:'12132123312',
-            }]
+            theName:'',
+            cardId:'',
+            patientPhone:'',
+            patientCard:'',
+            patientId:'',
+            type:0,
+            tabledata:[]
         }
     },
     mounted() {
-        this.getList()
+        this.getPatient()
     },
     methods: {
-        getList(){
-
+        getPatient(){
+            axion.getPatient(this.token,0).then( res => {
+                if(res.data.retCode == 0) {
+                    this.tabledata = res.data.param
+                }
+            })
         },
         add(){
+            this.type = 1
             this.dialogShow = true
             this.title = '新增就诊人'
-            this.patName = ''
-            this.Idcard = ''
-            this.phone = '',
-            this.jzId = ''
+            this.theName = ''
+            this.cardId = ''
+            this.patientPhone = '',
+            this.patientCard = ''
         },
         edit(row){
+            this.type = 2
             this.dialogShow = true
             this.title = '编辑就诊人'
-            this.patName = row.patName
-            this.Idcard = row.Idcard
-            this.phone = row.phone
-            this.jzId = row.jzId
+            this.patientId = row.id
+            this.theName = row.theName
+            this.cardId = row.cardId
+            this.patientPhone = row.patientPhone
+            this.patientCard = row.patientCard
         },
-        delete(row){
-            
+        isDelete(row){
+            this.patientId = row.id
+            const h = this.$createElement;
+                this.$msgbox({
+                    title: "删除确认",
+                    message: h("p", null, [
+                        h("p",{style: "line-height:22px"}, "是否删除所选就诊人")
+                    ]),
+                    showCancelButton: true,
+                    confirmButtonText:"确定",
+                    cancelButtonText:"取消",
+                    beforeClose: (action, instance, done) => {
+                        if(action === "confirm") {
+                            this.delete();//调删除接口
+                            done();
+                            instance.confirmButtonLoading = false;
+                        }else {
+                            done();
+                        }
+                    }
+                }).then(action => {
+                    action = '删除成功';
+                    this.$message.success(action)
+                })
+        },
+        delete(){
+            let param = {
+                patientId:this.patientId,
+                token:this.token,
+                type:0
+            }
+            axion.deletePatient(param).then(res => {
+                if(res.data.retCode == 0) {
+                   this.getPatient()
+                }else {
+                        this.$message.warning('删除失败')
+                }
+            })
         },
         save(){
-            this.dialogShow = false
-            console.log(this.patName,this.Idcard,this.phone,this.jzId)
+            let param = {
+                id:this.patientId,
+                theName:this.theName,
+                cardId:this.cardId,
+                patientCard:this.patientCard,
+                patientPhone:this.patientPhone,
+                token:this.token,
+                type:0
+            }
+            if(this.type == 2) {
+                axion.editPatient(param).then( res =>{
+                    if(res.data.retCode == 0) {
+                        this.getPatient()
+                        this.$message.success('保存就诊人成功')
+                    }else {
+                        this.$message.warning('保存失败')
+                    }
+                    this.dialogShow = false
+                })
+            }else if( this.type == 1) {
+                axion.addPatient(param).then(res => {
+                    if(res.data.retCode == 0) {
+                        this.getPatient()
+                        this.$message.success('保存就诊人成功')
+                    }else {
+                        this.$message.warning('保存失败')
+                    }
+                    this.dialogShow = false
+                })
+            }
         }
     },
 }

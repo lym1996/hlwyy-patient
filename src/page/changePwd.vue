@@ -26,10 +26,12 @@
   </div>
 </template>
 <script>
+import axion from '@/util/api.js'
 export default {
   data() {
     return {
-			phone: 'XXXXXXXX',
+            token:localStorage.getItem('user_token'),
+			      phone: localStorage.getItem('user_phone'),
             oldPwd: '',
             newPwd: '',
             newPwdAgain: '',
@@ -60,6 +62,19 @@ export default {
         return;
       }
       //调改密码接口
+      let param = {
+        token:this.token,
+        newPwd:this.newPwd,
+        oldPwd:this.oldPwd
+      }
+      axion.changePwd(param).then( res => {
+        if(res.data.retCode == 0) {
+          this.$message.success('修改成功')
+          this.$router.push('/')
+        }else {
+          this.$message.warning(res.data.retInfo)
+        }
+      })
     }
   }
 }

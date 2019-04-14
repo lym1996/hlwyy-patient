@@ -6,13 +6,13 @@
                 <p v-html="doc.doctorName" class="margintop10 paddingX15 lineEllipsis theme-color-40c7c3"></p>
                 <section class="relative">
                     <p class="margintop5 paddingX15 fontsize-1 lineEllipsis">
-                        <span v-html="!!doc.departmentName?doc.departmentName:''"></span>
-                        <i v-if="!!doc.departmentName && doc.level" class="marginX5">|</i>
-                        <span v-html="!!doc.level?doc.level:''"></span>
+                        <span v-html="!!doc.sectionName?doc.sectionName:''"></span>
+                        <i v-if="!!doc.sectionName && doc.linchuangTitle" class="marginX5">|</i>
+                        <span v-html="!!doc.linchuangTitle?doc.linchuangTitle:''"></span>
                     </p>
                     <p class="margintop10 paddingX15 fontsize-1">
-                        <span v-html="doc.scheduleDate+doc.startTime+'~'+doc.endTime"></span>
-                        <span class="marginleft15 color-fe9e20 bold">￥{{doc.price}}</span>
+                        <span v-html="doc.registionDate+'|'+doc.startTime+'~'+doc.endTime"></span>
+                        <span class="marginleft15 color-fe9e20 bold">￥{{doc.regitionPrice}}</span>
                     </p>
                     <div class="margin15X borderbottom-dashed"></div>
                     <div class="paddingX15 limited-2 fontsize-1 height40 textAlignLeft">
@@ -23,7 +23,7 @@
                         <p class="margintop5 marginleft20" v-html="doc.specialty">{{doc.specialty}}</p>
                     </el-scrollbar>
                     </div>
-                    <span v-if="doc.sourceNum > 0" @click="gofillInfor(doc)" class="margin15X docyy" style="padding:0px 105px;">预约</span>
+                    <span v-if="doc.registionNum > 0" @click="gofillInfor()" class="margin15X docyy" style="padding:0px 105px;">预约</span>
                     <span v-else class="margin15X docyy">暂无号源</span>
                 </section>
             </div>
@@ -40,7 +40,7 @@ export default {
             haveDoc:true
         }
     },
-    props: ["doclist"],
+    props: ["doclist","sectionId","timeType","date"],
     watch: {
         doclist() {
             if(this.doclist.length > 0) {
@@ -51,8 +51,8 @@ export default {
         }
     },
     methods: {
-        gofillInfor(doc){
-            this.$router.push({ path:'fillInfor' , query:{} })
+        gofillInfor(){
+            this.$router.push({ path:'fillInfor' , query:{sectionId:this.sectionId,timeType:this.timeType,date:this.date} })
         },
     },
 }

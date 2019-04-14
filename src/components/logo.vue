@@ -19,15 +19,16 @@
     </div>
 </template>
 <script>
-    import login from '../components/login'
-import { setTimeout } from 'timers';
+import login from '../components/login'
+import axion from '@/util/api.js'
 export default {
     components:{ login },
     data() {
         return {
-            name:localStorage.getItem('phone'),
+            name:localStorage.getItem('user_phone'),
             isLogin:localStorage.getItem('isLogin'),//控制用户名 从Item里取登录标识，如果是1就false，其他就是true
             ifLogin:false,//控制登录组件
+            token:localStorage.getItem('user_token'),
             tabIndex:''
         }
     },
@@ -51,10 +52,20 @@ export default {
         },
         logout() {
             //调退出接口 if 成功 sessionStorage.removeItem
-            localStorage.removeItem('phone');
-            localStorage.removeItem('isLogin')
-            this.$router.push({ path:'/home'})
-            this.$router.go(0)
+            let param = {
+                token:this.token
+            }
+            axion.logout(param).then( res => {
+                if(res.data.retCode == 0) {
+                    localStorage.removeItem('user_token');
+                    localStorage.removeItem('isLogin')
+                    localStorage.removeItem('user_phone')
+                    localStorage.removeItem('userId')
+                    this.$router.push({ path:'/home'})
+                    this.$router.go(0)
+                }
+            })
+            
         },
         // loginByToken(){
         //     //登录接口 sessionStorage.setItem

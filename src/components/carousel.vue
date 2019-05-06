@@ -1,6 +1,6 @@
 <template>
     <div style="width:100%;">
-        <el-carousel height="400px">
+        <el-carousel height="350px">
             <el-carousel-item v-for="(item,index) in imgList" :key="index">
                 <img :src="item.url" alt="">
             </el-carousel-item>

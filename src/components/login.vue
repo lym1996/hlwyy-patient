@@ -56,7 +56,7 @@
               style="margin-left:20px;"
               :src="imgsrc"
               alt="图形验证码"
-              @click=" getImgUrl"
+              @click=" getImgUrl(tabIndex)"
             >
           </div>
           <div
@@ -146,7 +146,6 @@
 </template>
 <script>
 import axion from '@/util/api.js'
-import { fail } from 'assert';
 export default {
   data() {
     return {

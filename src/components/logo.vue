@@ -1,8 +1,8 @@
 <template>
-    <div class="width100pct">
-        <div class="marginXauto width1210 clear margintop30 marginbottom30">
+    <div class="width100pct bgcolor-white">
+        <div class="marginXauto width1210 clear paddingbottom10">
             <img src="http://diagnose.zwjk.com/upload/2018/06/08/1528430211913.png" class="floatLeft" height="60">
-            <div class="floatRight lineheight40">
+            <div class="floatRight lineheight40 margintop15">
 				<span v-if="isLogin">
 					<span class="color-cacaca">您好，{{name}}</span>
 					<button type="button" class="marginleft10 btn commonTextBtn fontsize0" style="margin-top: -5px" @click="logout">退出</button>
